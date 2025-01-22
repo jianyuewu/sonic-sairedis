@@ -3017,6 +3017,12 @@ void sai_deserialize_enum(
 {
     SWSS_LOG_ENTER();
 
+    if (s.empty())
+    {
+        SWSS_LOG_ERROR("Empty string input for enum deserialization");
+        return;
+    }
+
     if (meta == NULL)
     {
         return sai_deserialize_number(s, value);

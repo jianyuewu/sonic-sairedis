@@ -1887,6 +1887,18 @@ sai_status_t VendorSai::logSet(
 {
     SWSS_LOG_ENTER();
 
+    if (api < SAI_API_UNSPECIFIED || api >= SAI_API_MAX)
+    {
+        SWSS_LOG_ERROR("Invalid api value: 0x%lx", api);
+        return SAI_STATUS_INVALID_PARAMETER;
+    }
+
+    if (log_level < SAI_LOG_LEVEL_DEBUG || log_level > SAI_LOG_LEVEL_CRITICAL)
+    {
+        SWSS_LOG_ERROR("Invalid log_level value: 0x%lx", log_level);
+        return SAI_STATUS_INVALID_PARAMETER;
+    }
+
     m_logLevelMap[api] = log_level;
 
     return m_globalApis.log_set(api, log_level);
