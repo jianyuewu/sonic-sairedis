@@ -111,7 +111,26 @@ if test "x$asan_enabled" = "xtrue"; then
     AC_SUBST(LDFLAGS_ASAN)
 fi
 
+AC_ARG_ENABLE(tsan,
+[  --enable-tsan      Compile with thread sanitizer],
+[case "${enableval}" in
+       yes) tsan_enabled=true ;;
+       no)  tsan_enabled=false ;;
+       *) AC_MSG_ERROR(bad value ${enableval} for --enable-tsan) ;;
+esac],[tsan_enabled=true])
+
+if test "x$tsan_enabled" = "xtrue"; then
+    CFLAGS_TSAN+=" -fsanitize=thread"
+    CFLAGS_TSAN+=" -DTSAN_ENABLED"
+    CFLAGS_TSAN+=" -ggdb -fno-omit-frame-pointer -fPIE -pie"
+    AC_SUBST(CFLAGS_TSAN)
+
+    LDFLAGS_TSAN+=" -ltsan"
+    AC_SUBST(LDFLAGS_TSAN)
+fi
+
 AM_CONDITIONAL(ASAN_ENABLED, test x$asan_enabled = xtrue)
+AM_CONDITIONAL(TSAN_ENABLED, test x$tsan_enabled = xtrue)
 
 AC_PATH_PROGS(SWIG, [swig3.0 swig])
 
